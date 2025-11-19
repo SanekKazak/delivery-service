@@ -1,0 +1,108 @@
+version: '3.9'
+
+services:
+  # ---------- AUTH ----------
+  auth-postgres:
+    image: postgres:17.0-alpine
+    container_name: postgres_auth_service_db
+    environment:
+      POSTGRES_USER: ${AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AUTH_POSTGRES_DB}
+    ports:
+      - "${AUTH_POSTGRES_PORT}:5432"
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth_service_app
+    depends_on:
+      - auth-postgres
+    environment:
+      SPRING_DATASOURCE_URL: ${AUTH_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${AUTH_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${AUTH_DB_PASSWORD}
+    ports:
+      - "8080:8080"
+
+  # ---------- USER ----------
+  user-postgres:
+    image: postgres:17.0-alpine
+    container_name: user_postgres_db
+    environment:
+      POSTGRES_USER: ${USER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${USER_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${USER_POSTGRES_DB}
+    ports:
+      - "${USER_POSTGRES_PORT}:5432"
+
+  user-service:
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    container_name: user_service_app
+    depends_on:
+      - user-postgres
+    environment:
+      SPRING_DATASOURCE_URL: ${USER_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${USER_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${USER_DB_PASSWORD}
+    ports:
+      - "8083:8080"
+
+  # ---------- RESTAURANT ----------
+  restaurant-postgres:
+    image: postgres:17.0-alpine
+    container_name: restaurant_postgres_db
+    environment:
+      POSTGRES_USER: ${RESTAURANT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${RESTAURANT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${RESTAURANT_POSTGRES_DB}
+    ports:
+      - "${RESTAURANT_POSTGRES_PORT}:5432"
+
+  restaurant-service:
+    build:
+      context: ./restaurants-service
+      dockerfile: Dockerfile
+    container_name: restaurant_service_app
+    depends_on:
+      - restaurant-postgres
+    environment:
+      SPRING_DATASOURCE_URL: ${RESTAURANT_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${RESTAURANT_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${RESTAURANT_DB_PASSWORD}
+    ports:
+      - "8082:8080"
+
+  # ---------- ORDER ----------
+  order-postgres:
+    image: postgres:17.0-alpine
+    container_name: order_postgres_db
+    environment:
+      POSTGRES_USER: ${ORDER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ORDER_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ORDER_POSTGRES_DB}
+    ports:
+      - "${ORDER_POSTGRES_PORT}:5432"
+
+  order-service:
+    build:
+      context: ./orders-service
+      dockerfile: Dockerfile
+    container_name: order_service_app
+    depends_on:
+      - order-postgres
+    environment:
+      SPRING_DATASOURCE_URL: ${ORDER_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${ORDER_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${ORDER_DB_PASSWORD}
+    ports:
+      - "8081:8080"
+
+volumes:
+  auth_postgres_data:
+  user_postgres_data:
+  restaurant_postgres_data:
+  order_postgres_data:

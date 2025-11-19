@@ -1,0 +1,30 @@
+spring:
+  liquibase:
+    change-log: classpath:db/db.changelog-master.yaml
+    enabled: true
+    default-schema: public
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  security:
+    enabled: true
+    chain: public
+    key:
+      public-access-token: oqeirunp023n4qwio3uernf9pq8dkonr34gt234g8024g9n42ig7924hg9
+      public-auth-service-token: g1n345ibyu34bn51345yb2gh34y52345
+      usage:
+        - public-auth-service-token
+        - public-access-token
+server:
+#  ssl:
+#    key-store: classpath:user_keystore.p12
+#    key-store-password: spring
+#    key-store-type: PKCS12
+#    key-alias: user-service
+#    enabled: true
+#    trust-store: classpath:user_truststore.p12
+#    trust-store-password: spring
+#    client-auth: need

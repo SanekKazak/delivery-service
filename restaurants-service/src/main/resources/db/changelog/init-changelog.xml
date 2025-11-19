@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <!-- ========== RESTAURANTS TABLE ========== -->
+    <changeSet id="1-create-restaurants" author="gorshok">
+        <createTable tableName="restaurants">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_id" type="UUID"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="avg_star" type="DOUBLE PRECISION"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="image" type="BLOB"/>
+            <column name="description" type="TEXT"/>
+            <column name="created" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========== RESTAURANT_ITEMS TABLE ========== -->
+    <changeSet id="2-create-restaurant-items" author="gorshok">
+        <createTable tableName="restaurant_items">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="TEXT"/>
+            <column name="image" type="BLOB"/>
+            <column name="price" type="DOUBLE PRECISION"/>
+            <column name="restaurant_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_restaurant_items_restaurant"
+                             referencedTableName="restaurants" referencedColumnNames="id"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========== RESTAURANT_COMMENTS TABLE ========== -->
+    <changeSet id="3-create-restaurant-comments" author="gorshok">
+        <createTable tableName="restaurant_comments">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stars" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="creator_id" type="UUID"/>
+            <column name="restaurant_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_restaurant_comments_restaurant"
+                             referencedTableName="restaurants" referencedColumnNames="id"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
